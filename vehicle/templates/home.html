@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<style>
+  .hero-section {
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: #fff;
+    padding: 100px 20px;
+    text-align: center;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  }
+
+  .hero-title {
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+  }
+
+  .hero-subtitle {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    margin-bottom: 30px;
+  }
+
+  .action-buttons a {
+    border-radius: 30px;
+    padding: 12px 25px;
+    margin: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: 0.3s;
+  }
+
+  .action-buttons a:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  }
+
+  .features-section {
+    margin-top: 60px;
+  }
+
+  .feature-card {
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 25px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    transition: 0.3s;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .feature-icon {
+    font-size: 40px;
+    margin-bottom: 15px;
+    color: #1e3c72;
+  }
+</style>
+
+<div class="container py-5">
+  <div class="hero-section">
+    <h1 class="hero-title">Vehicle Service & Maintenance System</h1>
+    <p class="hero-subtitle">A modern platform for managing your vehicle services efficiently.</p>
+
+    <div class="action-buttons">
+      <a href="{% url 'login' %}" class="btn btn-light text-dark">Login</a>
+      <a href="{% url 'register_customer' %}" class="btn btn-success">Register as Customer</a>
+      <a href="{% url 'register_servicecenter' %}" class="btn btn-warning">Register as Service Center</a>
+    </div>
+  </div>
+
+  <div class="row features-section text-center">
+    <div class="col-md-4 mb-4">
+      <div class="feature-card">
+        <div class="feature-icon">🚗</div>
+        <h4>Easy Booking</h4>
+        <p>Quickly schedule and manage your service appointments.</p>
+      </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+      <div class="feature-card">
+        <div class="feature-icon">🛠️</div>
+        <h4>Trusted Service Centers</h4>
+        <p>Find verified and reliable authorized service providers.</p>
+      </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h4>Track History</h4>
+        <p>Keep records of past services, invoices, and repairs.</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

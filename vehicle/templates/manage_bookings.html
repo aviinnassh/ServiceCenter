@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+{% block title %}Manage Bookings{% endblock %}
+
+{% block content %}
+
+<style>
+  body {
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(135deg, #dfe9ff, #ffffff);
+  }
+
+  .page-container {
+    max-width: 1300px;
+    margin: 35px auto;
+    padding: 20px;
+  }
+
+  .header-bar {
+    background: linear-gradient(135deg, #0d47a1, #1666d1);
+    color: white;
+    padding: 22px 28px;
+    border-radius: 18px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .header-title {
+    font-size: 28px;
+    font-weight: 700;
+  }
+
+  .filters {
+    margin: 20px 0;
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+
+  .search-box,
+  .dropdown-filter {
+    padding: 12px 15px;
+    border: 1px solid #d0d9ff;
+    border-radius: 12px;
+    font-size: 15px;
+    flex: 1;
+    min-width: 250px;
+    background: rgba(255,255,255,0.7);
+    backdrop-filter: blur(5px);
+  }
+
+  .table-card {
+    background: rgba(255,255,255,0.7);
+    backdrop-filter: blur(8px);
+    padding: 25px;
+    border-radius: 18px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead {
+    background: #0d47a1;
+    color: white;
+  }
+
+  th, td {
+    padding: 14px 16px;
+    text-align: center;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid #e3eaff;
+    transition: 0.2s ease;
+  }
+
+  tbody tr:hover {
+    background: #f1f6ff;
+    transform: scale(1.01);
+  }
+
+  /* Status Badge */
+.badge {
+    display: inline-flex;          /* allows vertical + horizontal centering */
+    align-items: center;           
+    justify-content: center;       
+    width: 100px;                  /* fixed width for all badges */
+    height: 28px;                  /* fixed height for all badges */
+    border-radius: 12px;           
+    font-size: 13px;               
+    font-weight: 600;
+    color: white;
+    text-align: center;
+}
+
+/* Status colors */
+.pending   { background: #f0a500; }
+.progress  { background: #3a8dff; }  /* softer blue */
+.completed { background: #1fa761; }
+.cancelled { background: #e74545; }
+
+
+  /* Action Buttons */
+  .action-btn {
+    padding: 7px 14px;
+    border-radius: 10px;
+    color: white;
+    font-size: 13px;
+    text-decoration: none;
+    margin-right: 6px;
+    display: inline-block;
+    transition: 0.2s;
+  }
+
+  .assign { background: #37474f; }
+  .update { background: #0288d1; }
+  .invoice { background: #2e7d32; }
+
+  .action-btn:hover {
+    opacity: 0.85;
+    transform: translateY(-2px);
+  }
+</style>
+
+<div class="page-container">
+
+  <!-- Header -->
+  <div class="header-bar">
+    <div class="header-title">📋 Manage Bookings</div>
+    <a href="{% url 'servicecenter_dashboard' %}" style="color:white; font-weight:600;">← Back</a>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters">
+    <input type="text" class="search-box" placeholder="Search customer, vehicle, date..." id="searchInput">
+
+    <select class="dropdown-filter" id="statusFilter">
+      <option value="">Filter by Status</option>
+      <option value="Pending">Pending</option>
+      <option value="In Progress">In Progress</option>
+      <option value="Completed">Completed</option>
+      <option value="Cancelled">Cancelled</option>
+    </select>
+  </div>
+
+  <!-- Table -->
+  <div class="table-card">
+    <table id="bookingTable">
+      <thead>
+        <tr>
+          <th>Customer</th>
+          <th>Vehicle</th>
+          <th>Date</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for b in bookings %}
+        <tr>
+          <td>{{ b.customer.name }}</td>
+          <td>{{ b.vehicle.vehicle_number }}</td>
+          <td>{{ b.scheduled_date }}</td>
+          <td>
+            <span class="badge 
+              {% if b.status == 'Pending' %} pending
+              {% elif b.status == 'In Progress' %} progress
+              {% elif b.status == 'Completed' %} completed
+              {% else %} cancelled {% endif %}
+            ">{{ b.status }}</span>
+          </td>
+
+          <td>
+            <a href="{% url 'assign_job' b.id %}" class="action-btn assign">Assign</a>
+            <a href="{% url 'update_booking_status' b.id %}" class="action-btn update">Update</a>
+            <a href="{% url 'generate_invoice' b.id %}" class="action-btn invoice">Invoice</a>
+          </td>
+        </tr>
+
+        {% empty %}
+        <tr>
+          <td colspan="5" style="padding:15px; color:#d63031; font-weight:600;">No bookings found.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- JS Filtering -->
+<script>
+  const searchInput = document.getElementById("searchInput");
+  const statusFilter = document.getElementById("statusFilter");
+  const table = document.getElementById("bookingTable");
+  const rows = table.getElementsByTagName("tr");
+
+  function filterTable() {
+    const searchText = searchInput.value.toLowerCase();
+    const status = statusFilter.value;
+
+    for (let i = 1; i < rows.length; i++) {
+      let cells = rows[i].getElementsByTagName("td");
+      if (!cells.length) continue;
+
+      let customer = cells[0].innerText.toLowerCase();
+      let vehicle = cells[1].innerText.toLowerCase();
+      let date = cells[2].innerText.toLowerCase();
+      let bookingStatus = cells[3].innerText.trim();
+
+      let matchesSearch = customer.includes(searchText) ||
+                          vehicle.includes(searchText) ||
+                          date.includes(searchText);
+
+      let matchesStatus = !status || bookingStatus === status;
+
+      rows[i].style.display = (matchesSearch && matchesStatus) ? "" : "none";
+    }
+  }
+
+  searchInput.addEventListener("keyup", filterTable);
+  statusFilter.addEventListener("change", filterTable);
+</script>
+
+{% endblock %}

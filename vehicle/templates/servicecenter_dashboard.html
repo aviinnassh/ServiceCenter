@@ -1,0 +1,545 @@
+{% extends 'base.html' %}
+{% block title %}Service Center Dashboard{% endblock %}
+
+{% block content %}
+
+<style>
+
+  body {
+    background: linear-gradient(135deg, #d7e3ff, #ffffff);
+    font-family: "Poppins", sans-serif;
+  }
+
+  .dashboard-wrapper {
+    max-width: 1250px;
+    margin: 30px auto;
+    padding: 30px;
+  }
+
+  /* Title Section */
+  .dashboard-header {
+    text-align: center;
+    margin-bottom: 45px;
+  }
+
+  .center-name {
+    font-size: 2.4rem;
+    font-family: "Orbitron", sans-serif;
+    color: #083a72;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    animation: fadeDown 0.8s ease;
+  }
+
+  .sub-title {
+    font-size: 1.1rem;
+    margin-top: 5px;
+    color: #1c4f8a;
+    font-weight: 500;
+    opacity: 0.8;
+  }
+
+  /* Stat Cards */
+  .stats-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+  }
+
+  .stat-card {
+    padding: 30px;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.55);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 8px 25px rgba(0, 60, 140, 0.15);
+    text-align: center;
+    transition: 0.3s ease;
+    border: 1px solid rgba(255,255,255,0.4);
+  }
+
+  .stat-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(0, 60, 140, 0.25);
+  }
+
+  .stat-icon {
+    font-size: 45px;
+    margin-bottom: 10px;
+    color: #0a3d78;
+  }
+
+  .stat-title {
+    font-size: 14px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #0f4c81;
+    font-weight: 600;
+  }
+
+  .stat-value {
+    font-size: 38px;
+    font-weight: 700;
+    margin-top: 8px;
+    color: #002f6c;
+  }
+
+
+
+  /* Buttons */
+  .action-bar {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .btn-glass {
+    padding: 10px 18px;
+    font-weight: 600;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    background: linear-gradient(135deg, #0d47a1, #1666d1);
+    color: white;
+    transition: 0.3s ease;
+    box-shadow: 0 5px 20px rgba(0, 60, 140, 0.3);
+  }
+
+  .btn-glass:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 60, 140, 0.4);
+    background: linear-gradient(135deg, #093472, #134fa6);
+  }
+
+  /* Table */
+  .table-container {
+    margin-top: 25px;
+    background: rgba(255,255,255,0.6);
+    backdrop-filter: blur(10px);
+    padding: 25px;
+    border-radius: 18px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    animation: fadeIn 0.7s ease;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  table thead {
+    background: #0d47a1;
+    color: white;
+  }
+
+  table th {
+    padding: 14px;
+    font-size: 14px;
+    text-transform: uppercase;
+  }
+
+  table td {
+    padding: 14px;
+    color: #0b3c6f;
+    border-bottom: 1px solid #d6e6ff;
+  }
+
+  tr:hover td {
+    background: #eaf3ff;
+  }
+
+  /* Status badges */
+.badge {
+    display: inline-flex;          /* allows vertical + horizontal centering */
+    align-items: center;           
+    justify-content: center;       
+    width: 100px;                  /* fixed width for all badges */
+    height: 28px;                  /* fixed height for all badges */
+    border-radius: 12px;           
+    font-size: 13px;               
+    font-weight: 600;
+    color: white;
+    text-align: center;
+}
+
+/* Status colors */
+.pending   { background: #f0a500; }
+.progress  { background: #3a8dff; }  /* softer blue */
+.completed { background: #1fa761; }
+.cancelled { background: #e74545; }
+
+
+
+  /* History Dashboard */
+.history-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 25px;
+  margin-bottom: 30px;
+}
+
+.history-card {
+  padding: 25px;
+  border-radius: 16px;
+  text-align: center;
+  background: rgba(255,255,255,0.55);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 22px rgba(0, 60, 140, 0.15);
+  transition: .3s ease;
+}
+
+.history-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 30px rgba(0, 60, 140, 0.25);
+}
+
+.history-icon {
+  font-size: 42px;
+  margin-bottom: 10px;
+}
+
+.history-title {
+  font-size: 14px;
+  letter-spacing: 1px;
+  font-weight: 600;
+  opacity: 0.7;
+}
+
+.history-value {
+  font-size: 34px;
+  font-weight: 800;
+  color: #0a3d78;
+  margin-top: 8px;
+}
+
+
+  /* Action Buttons in Table */
+  .tbl-btn {
+    padding: 6px 12px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    border: none;
+    color: white;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-right: 5px;
+  }
+
+  .tbl-btn.assign { background: #455a64; }
+  .tbl-btn.update { background: #0288d1; }
+  .tbl-btn.invoice { background: #2e7d32; }
+
+  .tbl-btn:hover {
+    opacity: 0.85;
+    transform: translateY(-2px);
+  }
+
+  .stat-card a {
+    text-decoration: none !important;
+    color: inherit;            /* optional — keeps same text color */
+}
+
+.stat-card a:hover {
+    text-decoration: none !important;
+}
+
+
+.detail-box {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  margin-top: 0;
+  padding: 0 25px;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.75);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 12px 35px rgba(0,60,140,0.25);
+  transform: translateY(-10px);
+  transition:
+    max-height 0.6s ease,
+    opacity 0.45s ease,
+    transform 0.45s ease,
+    margin 0.3s ease,
+    padding 0.3s ease;
+}
+
+.detail-box.active {
+  max-height: 600px;
+  opacity: 1;
+  transform: translateY(0);
+  margin-top: 25px;
+  padding: 25px;
+}
+
+
+.detail-box h4 {
+  margin-bottom: 15px;
+  color: #083a72;
+  font-weight: 700;
+}
+
+.detail-item {
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #eef5ff;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #083a72;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+
+/* Action Dashboard */
+.action-dash {
+  margin: 40px 0;
+  text-align: center;
+}
+
+.action-title {
+  font-size: 1.6rem;
+  color: #083a72;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.action-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 20px;
+}
+
+.action-box {
+  padding: 25px;
+  border-radius: 18px;
+  text-decoration: none;
+  background: rgba(255,255,255,0.55);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.4);
+  box-shadow: 0 6px 22px rgba(0, 60, 140, 0.2);
+  color: #083a72;
+  font-weight: 600;
+  transition: 0.3s ease;
+}
+
+.action-box:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 35px rgba(0, 60, 140, 0.3);
+}
+
+.action-icon {
+  font-size: 40px;
+  margin-bottom: 8px;
+}
+
+.action-text {
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+}
+
+
+  /* Animations */
+  @keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
+  @keyframes fadeDown { from {opacity:0; transform:translateY(-10px);} to {opacity:1;} }
+
+</style>
+
+<div class="dashboard-wrapper">
+
+  <!-- HEADER -->
+  <div class="dashboard-header">
+    <h1 class="center-name">{{ service_center.name }}</h1>
+    <p class="sub-title">Service & Maintanance</p>
+  </div>
+
+  <div class="stats-container">
+
+  <div class="stat-card" data-target="bookingsBox">
+    <div class="stat-icon">📘</div>
+    <div class="stat-title">Total Bookings</div>
+    <div class="stat-value">{{ bookings.count }}</div>
+  </div>
+
+  <div class="stat-card" data-target="pendingBox">
+    <div class="stat-icon">⏳</div>
+    <div class="stat-title">Pending Jobs</div>
+    <div class="stat-value">{{ pending_jobs.count }}</div>
+  </div>
+
+  <div class="stat-card" data-target="staffBox">
+    <div class="stat-icon">👨‍🔧</div>
+    <div class="stat-title">Total Staff</div>
+    <div class="stat-value">{{ staff.count }}</div>
+  </div>
+
+</div>
+
+<div id="bookingsBox" class="detail-box">
+  <h4>Total Bookings</h4>
+  {% for b in bookings %}
+    <div class="detail-item">
+      {{ b.vehicle.vehicle_number }} — {{ b.customer.user.username }}
+    </div>
+  {% empty %}
+    <p>No bookings found.</p>
+  {% endfor %}
+</div>
+
+<div id="pendingBox" class="detail-box">
+  <h4>Pending Jobs</h4>
+  {% for p in pending_jobs %}
+    <div class="detail-item">
+      {{ p.vehicle.vehicle_number }} — {{ p.scheduled_date }}
+    </div>
+  {% empty %}
+    <p>No pending jobs.</p>
+  {% endfor %}
+</div>
+
+<div id="staffBox" class="detail-box">
+  <h4>Staff Members</h4>
+  {% for s in staff %}
+    <div class="detail-item">
+      {{ s.name }} — {{ s.role }}
+    </div>
+  {% empty %}
+    <p>No staff found.</p>
+  {% endfor %}
+</div>
+
+
+<!-- Action Dashboard -->
+<div class="action-dash">
+  <h3 class="action-title">Service & Manage</h3>
+
+  <div class="action-grid">
+
+    <a href="{% url 'add_staff' %}" class="action-box">
+      <div class="action-icon">➕</div>
+      <div class="action-text">Add Staff</div>
+    </a>
+
+    <a href="{% url 'staff_list' %}" class="action-box">
+      <div class="action-icon">👨‍🔧</div>
+      <div class="action-text">Manage Staff</div>
+    </a>
+
+    <a href="{% url 'manage_bookings' %}" class="action-box">
+      <div class="action-icon">📘</div>
+      <div class="action-text">Manage Bookings</div>
+    </a>
+    
+<a href="{% url 'assigned_jobs_view' %}" class="action-box">
+  <div class="action-icon">🛠</div>
+  <div class="action-text">Assigned Jobs</div>
+</a>
+
+  </div>
+</div>
+
+  <!-- Table -->
+  <div class="table-container">
+    <h4 style="font-weight:700; color:#0a3d78; margin-bottom:15px;">📄 Recent Bookings</h4>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Customer</th>
+          <th>Vehicle</th>
+          <th>Date</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for b in bookings %}
+        <tr>
+          <td>{{ b.customer.name }}</td>
+          <td>{{ b.vehicle.vehicle_number }}</td>
+          <td>{{ b.scheduled_date }}</td>
+
+          <td>
+            <span class="badge
+              {% if b.status == 'Pending' %} pending
+              {% elif b.status == 'In Progress' %} progress
+              {% elif b.status == 'Completed' %} completed
+              {% else %} cancelled {% endif %}
+            ">
+              {{ b.status }}
+            </span>
+          </td>
+
+          <td>
+            <a href="{% url 'assign_job' b.id %}">
+              <button class="tbl-btn assign">Assign</button>
+            </a>
+
+            <a href="{% url 'update_booking_status' b.id %}">
+              <button class="tbl-btn update">Update</button>
+            </a>
+
+            <a href="{% url 'generate_invoice' b.id %}">
+              <button class="tbl-btn invoice">Invoice</button>
+            </a>
+          </td>
+        </tr>
+
+        {% empty %}
+        <tr>
+          <td colspan="5" class="text-center text-muted">No bookings found.</td>
+        </tr>
+
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+<script>
+  document.querySelectorAll(".stat-card").forEach(card => {
+    card.addEventListener("click", () => {
+      const targetId = card.dataset.target;
+      const targetBox = document.getElementById(targetId);
+
+      // reset all cards
+      document.querySelectorAll(".stat-card").forEach(c => c.classList.remove("active"));
+
+      // close all boxes
+      document.querySelectorAll(".detail-box").forEach(box => {
+        if (box !== targetBox) {
+          box.classList.remove("active");
+        }
+      });
+
+      // toggle current
+      card.classList.add("active");
+      targetBox.classList.toggle("active");
+
+      // smooth scroll
+      if (targetBox.classList.contains("active")) {
+        setTimeout(() => {
+          targetBox.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+          });
+        }, 200);
+      }
+    });
+  });
+</script>
+
+
+{% endblock %}

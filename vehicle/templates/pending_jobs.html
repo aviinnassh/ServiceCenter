@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+{% block title %}Pending Jobs{% endblock %}
+
+{% block content %}
+
+<style>
+  body {
+      background: linear-gradient(135deg, #e7f0ff, #ffffff);
+      font-family: "Poppins", sans-serif;
+      color: #1a3d6d;
+  }
+
+  .container-box {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 15px;
+  }
+
+  /* Back Button */
+  .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      background: #0d47a1;
+      color: white !important;
+      border-radius: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      font-size: 15px;
+      transition: 0.25s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      margin-bottom: 20px;
+  }
+
+  .back-btn:hover {
+      background: #09357a;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+  }
+
+  .back-btn .arrow { font-size: 18px; font-weight: 700; }
+
+  /* Header Bar */
+  .header-bar {
+      background: linear-gradient(135deg, #1a73e8, #0d47a1);
+      padding: 26px 30px;
+      border-radius: 18px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      color: white;
+      margin-bottom: 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+  }
+
+  .header-title { font-size: 26px; font-weight: 700; }
+
+  /* Table Card */
+  .table-card {
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(12px);
+      padding: 25px;
+      border-radius: 18px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.07);
+  }
+
+  table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+  }
+
+  thead { background: #0d47a1; color: white; }
+
+  th, td { padding: 13px 16px; white-space: nowrap; text-align: center; }
+
+  tbody tr { border-bottom: 1px solid #e0edff; transition: 0.2s ease; }
+  tbody tr:hover { background: #f1f7ff; }
+
+  /* Status Badge */
+  .status-badge {
+      padding: 5px 12px;
+      border-radius: 12px;
+      color: white;
+      font-weight: 600;
+      font-size: 14px;
+  }
+
+  .pending { background-color: #f57c00; }
+  .in-progress { background-color: #1976d2; }
+  .completed { background-color: #388e3c; }
+  .cancelled { background-color: #d32f2f; }
+
+  /* Empty Row */
+  .empty-row td {
+      padding: 20px;
+      color: #556;
+      text-align: center;
+  }
+</style>
+
+<div class="container-box">
+
+  <!-- Back Button -->
+  <a href="{% url 'servicecenter_dashboard' %}" class="back-btn">
+      <span class="arrow">←</span> Back
+  </a>
+
+  <!-- Header Bar -->
+  <div class="header-bar">
+      <div class="header-title">🛠 Pending Jobs</div>
+  </div>
+
+  <!-- Table Card -->
+  <div class="table-card">
+      <table>
+          <thead>
+              <tr>
+                  <th>Booking ID</th>
+                  <th>Vehicle</th>
+                  <th>Customer</th>
+                  <th>Scheduled Date</th>
+                  <th>Status</th>
+              </tr>
+          </thead>
+
+
+  <tbody>
+    {% for b in pending_bookings %}
+    <tr>
+      <td>{{ b.id }}</td>
+      <td>{{ b.vehicle.vehicle_number }}</td>
+      <td>{{ b.customer.name }}</td>
+      <td>{{ b.scheduled_date }}</td>
+      <td>{{ b.status }}</td>
+    </tr>
+    {% empty %}
+    <tr class="empty-row">
+      <td colspan="5">No pending jobs</td>
+    </tr>
+            {% endfor %}
+      </tbody>
+    </table>
+</div>
+
+</div>
+
+{% endblock %}

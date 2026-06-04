@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+  body {
+    background: linear-gradient(135deg, #e6f4ff, #ffffff);
+    font-family: "Poppins", sans-serif;
+    color: #1a3d6d;
+  }
+
+  .form-container {
+    max-width: 600px;
+    margin: 50px auto;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0, 80, 150, 0.15);
+    animation: slideUp 0.8s ease forwards;
+  }
+
+  h3 {
+    text-align: center;
+    font-weight: 700;
+    margin-bottom: 30px;
+    color: #0d47a1;
+    animation: fadeDown 0.8s ease;
+  }
+
+  /* Back Button */
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background: #0d47a1;
+    color: white !important;
+    border-radius: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 15px;
+    transition: 0.25s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    margin-bottom: 20px;
+  }
+
+  .back-btn:hover {
+    background: #09357a;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+  }
+
+  .back-btn .arrow {
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  form label {
+    font-weight: 600;
+    color: #0d47a1;
+    margin-bottom: 5px;
+  }
+
+  form input, form select, form textarea {
+    width: 100%;
+    padding: 12px 14px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    border: 1px solid #cde0ff;
+    transition: 0.25s ease;
+  }
+
+  form input:focus, form select:focus, form textarea:focus {
+    box-shadow: 0 0 12px rgba(13,110,253,0.4);
+    transform: scale(1.02);
+    outline: none;
+  }
+
+  .btn-update {
+    background: linear-gradient(135deg, #42a5f5, #1976d2);
+    color: #fff;
+    border: none;
+    padding: 12px;
+    font-size: 17px;
+    border-radius: 14px;
+    width: 100%;
+    font-weight: 600;
+    transition: 0.3s ease;
+    cursor: pointer;
+  }
+
+  .btn-update:hover {
+    background: linear-gradient(135deg, #1976d2, #42a5f5);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(58, 143, 255, 0.4);
+  }
+
+  /* Animations */
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px);}
+    to { opacity: 1; transform: translateY(0);}
+  }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px);}
+    to { opacity: 1; transform: translateY(0);}
+  }
+
+</style>
+
+<div class="form-container">
+  <a href="{% url 'servicecenter_dashboard' %}" class="back-btn">
+    <span class="arrow">←</span> Back
+  </a>
+  <h3>Update Booking Status</h3>
+  <form method="POST">
+      {% csrf_token %}
+      {% for field in form %}
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}
+            <div style="color:#d93030; font-size:14px; margin-bottom:10px;">
+              {{ field.errors }}
+            </div>
+          {% endif %}
+      {% endfor %}
+      <button type="submit" class="btn-update">Update</button>
+  </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% block title %}Service History Details{% endblock %}
+
+{% block content %}
+
+<style>
+  body {
+    background: #f0f5ff;
+    font-family: "Poppins", sans-serif;
+  }
+
+  .detail-wrapper {
+    max-width: 800px;
+    margin: 40px auto;
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 30px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  }
+
+  h2 {
+    font-weight: 700;
+    color: #1a3d6d;
+    margin-bottom: 25px;
+  }
+
+  .info-row {
+    margin-bottom: 18px;
+    font-size: 17px;
+  }
+
+  .label {
+    font-weight: 600;
+    color: #0a2e57;
+  }
+
+  .value {
+    color: #444;
+  }
+
+  .back-btn {
+    display: inline-block;
+    margin-top: 25px;
+    padding: 10px 18px;
+    background: #1a3d6d;
+    color: white;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: 0.3s;
+  }
+
+  .back-btn:hover {
+    background: #0e2747;
+  }
+
+  .card {
+    background: #f8faff;
+    border-radius: 10px;
+    padding: 18px;
+    margin-top: 20px;
+  }
+</style>
+
+<div class="detail-wrapper">
+  <h2>Service History Details</h2>
+
+  <div class="info-row">
+    <span class="label">Vehicle:</span>
+    <span class="value">{{ history.vehicle.vehicle_number }}  </span>
+  </div>
+  <div class="info-row">
+    <span class="label">Model:</span>
+    <span class="value">{{ history.vehicle.manufacturer }} - {{ history.vehicle.model }}</span>
+  </div>
+
+  <div class="info-row">
+    <span class="label">Customer:</span>
+    <span class="value">{{ history.customer.name }}</span>
+
+  </div>
+
+  <div class="info-row">
+    <span class="label">Service Center:</span>
+    <span class="value">{{ history.service_center.name }}</span>
+  </div>
+
+  <div class="info-row">
+    <span class="label">Service Date:</span>
+    <span class="value">{{ history.service_date }}</span>
+  </div>
+
+  <div class="info-row">
+    <span class="label">Booking ID:</span>
+    <span class="value">{{ history.booking.id }}</span>
+  </div>
+
+  <div class="info-row">
+    <span class="label">Service Status:</span>
+    <span class="value">{{ history.booking.status }}</span>
+  </div>
+
+  <div class="card">
+    <div class="info-row">
+      <span class="label">Details:</span>
+      <span class="value">   {{ history.booking.description }} <br><br> {{ history.details }} </span>
+    </div>
+
+    <div class="info-row">
+      <span class="label">Cost:</span>
+      <span class="value">₹ {{ history.cost }}</span>
+    </div>
+  </div>
+
+  <a href="{% url 'service_history' %}" class="back-btn">← Back to History</a>
+</div>
+
+{% endblock %}

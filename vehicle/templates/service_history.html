@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% block title %}Service History{% endblock %}
+
+{% block content %}
+
+<style>
+  body {
+    background: linear-gradient(135deg, #e8f1ff, #ffffff);
+    font-family: "Poppins", sans-serif;
+  }
+
+  .history-container {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 30px;
+  }
+
+  h2 {
+    color: #1a3d6d;
+    font-weight: 700;
+    margin-bottom: 25px;
+    text-align: center;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  }
+
+  thead {
+    background: #0d47a1;
+    color: white;
+  }
+
+  th, td {
+    padding: 14px;
+    text-align: left;
+  }
+
+  tr:hover td {
+    background: #eaf3ff;
+  }
+
+  .btn-view {
+    padding: 6px 14px;
+    background: #1a3d6d;
+    color: white;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: 0.3s;
+  }
+
+  .btn-view:hover {
+    background: #0f2746;
+  }
+
+  .badge {
+    padding: 4px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: white;
+  }
+
+  .pending { background: #f0a500; }
+  .progress { background: #0d6efd; }
+  .completed { background: #1fa761; }
+  .cancelled { background: #e74545; }
+</style>
+
+<div class="history-container">
+  <h2>Your Service History</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Vehicle</th>
+        <th>Service Center</th>
+        <th>Service Date</th>
+        <th>Status</th>
+        <th>Details</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for history in histories %}
+      <tr>
+        <td>{{ history.vehicle.vehicle_number }} </td>
+        <td>{{ history.service_center.name }}</td>
+        <td>{{ history.service_date }}</td>
+        <td>
+          <span class="badge
+            {% if history.booking.status == 'Pending' %} pending
+            {% elif history.booking.status == 'In Progress' %} progress
+            {% elif history.booking.status == 'Completed' %} completed
+            {% else %} cancelled {% endif %}">
+            {{ history.booking.status }}
+          </span>
+        </td>
+        <td>
+          <a href="{% url 'history_detail' history.id %}" class="btn-view">View Details</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="5" style="text-align:center;">No service history found.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <br>
+  <a href="{% url 'customer_dashboard' %}" class="btn-view">← Back to Dashboard</a>
+</div>
+
+{% endblock %}

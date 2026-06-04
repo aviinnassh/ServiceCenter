@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+
+<style>
+  body {
+    background: #000;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .dashboard-card {
+    background: #111;
+    padding: 30px;
+    border-radius: 20px;
+    margin: auto;
+    max-width: 900px;
+    box-shadow: 0 0 20px rgba(255, 204, 0, 0.2);
+    animation: fadeIn 1.3s ease;
+  }
+
+  h2 {
+    color: #ffcc00;
+    font-family: 'Orbitron', sans-serif;
+    text-align: center;
+    animation: slideDown 1s ease;
+  }
+
+  .muted {
+    color: #bbb;
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 14px;
+  }
+
+  .grid-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+  }
+
+  .action-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #000;
+    border: 1px solid #ffcc00;
+    border-radius: 15px;
+    padding: 25px 10px;
+    text-decoration: none;
+    color: #ffcc00;
+    font-weight: 600;
+    letter-spacing: 1px;
+    transition: 0.3s;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 12px rgba(255, 204, 0, 0.2);
+    animation: fadeUp 1.2s ease forwards;
+  }
+
+  .action-card:hover {
+    transform: translateY(-5px) scale(1.03);
+    box-shadow: 0 0 20px rgba(255, 204, 0, 0.5);
+    background: #111;
+  }
+
+  /* Glow animation */
+  .action-card::before {
+    content: "";
+    position: absolute;
+    top: -60%;
+    left: -60%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,204,0,0.25), transparent 60%);
+    transform: rotate(45deg);
+    transition: opacity 0.3s;
+    opacity: 0;
+  }
+  .action-card:hover::before {
+    opacity: 1;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slideDown {
+    from { transform: translateY(-20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  @keyframes fadeUp {
+    from { transform: translateY(25px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+</style>
+
+<div class="dashboard-card">
+  <h2>Welcome, {{ request.user.username }}</h2>
+  <p class="muted">Quick links to manage vehicles and services</p>
+
+  <div class="grid-links">
+    <a href="{% url 'add_vehicle' %}" class="action-card">
+      <h3>Add Vehicle</h3>
+    </a>
+    <a href="{% url 'booking_service' %}" class="action-card">
+      <h3>Book Service</h3>
+    </a>
+    <a href="{% url 'view_bookings' %}" class="action-card">
+      <h3>View Bookings</h3>
+    </a>
+    <a href="{% url 'view_history' %}" class="action-card">
+      <h3>Service History</h3>
+    </a>
+  </div>
+</div>
+
+{% endblock %}

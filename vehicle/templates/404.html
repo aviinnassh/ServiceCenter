@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block title %}Not Found{% endblock %}
+{% block content %}
+<div class="card glow center">
+  <h1 style="font-family:'Orbitron';color:var(--accent);font-size:48px;">404</h1>
+  <p>Page Not Found</p>
+  <a href="{% url 'dashboard' %}" class="btn btn-outline">Go Home</a>
+</div>
+{% endblock %}

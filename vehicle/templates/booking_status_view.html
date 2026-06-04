@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% block title %}Booking Status{% endblock %}
+
+{% block content %}
+
+<style>
+.container-box{
+  max-width:900px;
+  margin:40px auto;
+}
+
+/* Back button */
+.back-btn{
+  display:inline-block;
+  margin-bottom:20px;
+  padding:10px 18px;
+  background:#0d47a1;
+  color:white !important;
+  border-radius:12px;
+  font-weight:600;
+  text-decoration:none;
+  transition:0.3s ease;
+}
+
+.back-btn:hover{
+  background:#09357a;
+  transform:translateY(-2px);
+}
+
+.status-card{
+  background:rgba(255,255,255,.8);
+  backdrop-filter:blur(12px);
+  border-radius:18px;
+  padding:30px;
+  box-shadow:0 10px 25px rgba(0,0,0,.1);
+}
+
+.status-header{
+  text-align:center;
+  margin-bottom:25px;
+}
+
+.status-badge{
+  padding:8px 18px;
+  border-radius:20px;
+  font-weight:700;
+  color:white;
+}
+
+.Pending{background:#f0a500;}
+.In\ Progress{background:#0d6efd;}
+.Completed{background:#1fa761;}
+.Cancelled{background:#e74545;}
+
+.timeline{
+  margin-top:30px;
+}
+
+.timeline-item{
+  background:#f1f6ff;
+  border-left:4px solid #0d47a1;
+  padding:15px 18px;
+  border-radius:12px;
+  margin-bottom:15px;
+}
+
+.timeline-item small{
+  color:#555;
+}
+</style>
+
+<div class="container-box">
+
+  <!-- Back Button -->
+  <a href="{% url 'servicecenter_dashboard' %}" class="back-btn">
+    ← Back
+  </a>
+
+  <div class="status-card">
+
+    <div class="status-header">
+      <h2>Service Status</h2>
+      <p><strong>Vehicle:</strong> {{ booking.vehicle.vehicle_number }}</p>
+      <p>
+        <span class="status-badge {{ booking.status }}">
+          {{ booking.status }}
+        </span>
+      </p>
+    </div>
+
+    <h4>Status History</h4>
+
+    {% for status in status_updates %}
+      <div class="timeline-item">
+        <strong>{{ status.current_status }}</strong><br>
+        <small>{{ status.updated_on|date:"d M Y, h:i A" }}</small>
+        {% if status.remarks %}
+          <p>{{ status.remarks }}</p>
+        {% endif %}
+      </div>
+    {% empty %}
+      <p>No status updates yet.</p>
+    {% endfor %}
+
+  </div>
+</div>
+
+{% endblock %}
